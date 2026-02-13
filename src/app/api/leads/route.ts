@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import { addLead, readLeads } from "@/lib/fileDb";
-import { Lead } from "@/lib/types";
 
 function json(data: unknown, status = 200) {
   return NextResponse.json(data, { status });
@@ -35,26 +33,37 @@ export async function POST(req: Request) {
     if (!allowedAcType.includes(acType)) return json({ error: "Invalid AC type." }, 400);
     if (!allowedTon.includes(tonnage)) return json({ error: "Invalid tonnage." }, 400);
 
-    const lead: Lead = {
-      id: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
-      name,
-      phone,
-      area,
-      serviceType: serviceType as Lead["serviceType"],
-      acType: acType as Lead["acType"],
-      tonnage: tonnage as Lead["tonnage"],
-      message: message ? message.slice(0, 800) : undefined,
-    };
+    const WEBAPP_URL = process.env.SHEETS_WEBAPP_URL;
+    const TOKEN = process.env.LEADS_TOKEN;
 
-    addLead(lead);
-    return json({ ok: true, leadId: lead.id }, 201);
+    if (!WEBAPP_URL || !TOKEN) {
+      return json({ error: "Server not configured (missing SHEETS_WEBAPP_URL/LEADS_TOKEN)." }, 500);
+    }
+
+    // Send lead to Google Apps Script (Google Sheet)
+    const res = await fetch(`${WEBAPP_URL}?token=${encodeURIComponent(TOKEN)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        phone,
+        area,
+        serviceType,
+        acType,
+        tonnage,
+        message: message ? message.slice(0, 800) : "",
+        source: "vercel",
+      }),
+    });
+
+    const data = await res.json().catch(() => null);
+
+    if (!res.ok || !data?.ok) {
+      return json({ error: "Failed to save lead to Google Sheets." }, 500);
+    }
+
+    return json({ ok: true }, 201);
   } catch {
     return json({ error: "Invalid request." }, 400);
   }
-}
-
-export async function GET() {
-  const leads = readLeads();
-  return json({ leads });
 }
