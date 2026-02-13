@@ -14,47 +14,44 @@ export default function BookingForm() {
   const acTypeOptions = useMemo(() => (["Inverter", "Non-Inverter", "Not sure"]), []);
   const tonOptions = useMemo(() => (["1 Ton", "1.5 Ton", "2 Ton", "Not sure"]), []);
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setStatus({ type: "idle" });
-    setLoading(true);
-
-    const fd = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(fd.entries());
-
-    try {
-          const res = await fetch("/api/leads", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        
-        // ✅ If success, don't parse body. Just mark success.
-        if (res.ok) {
-          setStatus({ type: "ok", msg: "Booked! We’ll contact you shortly." });
-          e.currentTarget.reset();
-          return;
-        }
-    
-         // ❌ If not ok, try to read error message
-         let errMsg = "Something went wrong.";
-         try {
-           const data = await res.json();
-           errMsg = data?.error || errMsg;
-       } catch {
-         const txt = await res.text().catch(() => "");
-         if (txt) errMsg = txt;
-       }
-       setStatus({ type: "err", msg: errMsg });
-
-       } catch (err: any) {
-     // If the request was aborted (common during navigation), don't show error
-     if (err?.name === "AbortError") return;
-     setStatus({ type: "err", msg: "Network error. Please try again." });
-       }finally {
-             setLoading(false);
-           }
+       async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+       e.preventDefault();
+       setStatus({ type: "idle" });
+       setLoading(true);
+     
+       // IMPORTANT: capture form reference BEFORE any await
+       const form = e.currentTarget;
+       const fd = new FormData(form);
+       const payload = Object.fromEntries(fd.entries());
+     
+       try {
+         const res = await fetch("/api/leads", {
+           method: "POST",
+           headers: { "Content-Type": "application/json" },
+           body: JSON.stringify(payload),
+         });
+     
+         // Read as text first (never throws like res.json sometimes can)
+         const text = await res.text();
+         let data: any = {};
+         try { data = text ? JSON.parse(text) : {}; } catch { data = {}; }
+     
+         if (!res.ok) {
+           setStatus({ type: "err", msg: data?.error || `Request failed (${res.status})` });
+           return;
          }
+     
+         setStatus({ type: "ok", msg: "Booked! We’ll contact you shortly." });
+         form.reset();
+       } catch (err: any) {
+         console.log("Submit error:", err);
+         if (err?.name === "AbortError") return;
+         setStatus({ type: "err", msg: err?.message || "Network error. Please try again." });
+       } finally {
+         setLoading(false);
+       }
+     }
+
 
   return (
     <div className="card">
