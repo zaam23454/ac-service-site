@@ -37,12 +37,14 @@ export default function BookingForm() {
 
       setStatus({ type: "ok", msg: "Booked! We’ll contact you shortly." });
       e.currentTarget.reset();
-    } catch {
-      setStatus({ type: "err", msg: "Network error. Please try again." });
-    } finally {
-      setLoading(false);
-    }
-  }
+       } catch (err: any) {
+     // If the request was aborted (common during navigation), don't show error
+     if (err?.name === "AbortError") return;
+     setStatus({ type: "err", msg: "Network error. Please try again." });
+       }finally {
+             setLoading(false);
+           }
+         }
 
   return (
     <div className="card">
