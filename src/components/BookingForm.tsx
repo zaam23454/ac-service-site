@@ -23,20 +23,30 @@ export default function BookingForm() {
     const payload = Object.fromEntries(fd.entries());
 
     try {
-      const res = await fetch("/api/leads", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+          const res = await fetch("/api/leads", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        
+        // ✅ If success, don't parse body. Just mark success.
+        if (res.ok) {
+          setStatus({ type: "ok", msg: "Booked! We’ll contact you shortly." });
+          e.currentTarget.reset();
+          return;
+        }
+    
+         // ❌ If not ok, try to read error message
+         let errMsg = "Something went wrong.";
+         try {
+           const data = await res.json();
+           errMsg = data?.error || errMsg;
+       } catch {
+         const txt = await res.text().catch(() => "");
+         if (txt) errMsg = txt;
+       }
+       setStatus({ type: "err", msg: errMsg });
 
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        setStatus({ type: "err", msg: data?.error || "Something went wrong." });
-        return;
-      }
-
-      setStatus({ type: "ok", msg: "Booked! We’ll contact you shortly." });
-      e.currentTarget.reset();
        } catch (err: any) {
      // If the request was aborted (common during navigation), don't show error
      if (err?.name === "AbortError") return;
