@@ -19,10 +19,9 @@ export default function BookingForm() {
        setStatus({ type: "idle" });
        setLoading(true);
      
-       // IMPORTANT: capture form reference BEFORE any await
        const form = e.currentTarget;
        const fd = new FormData(form);
-       const payload = Object.fromEntries(fd.entries());
+       const payload = Object.fromEntries(fd.entries()) as Record<string, string>;
      
        try {
          const res = await fetch("/api/leads", {
@@ -31,7 +30,6 @@ export default function BookingForm() {
            body: JSON.stringify(payload),
          });
      
-         // Read as text first (never throws like res.json sometimes can)
          const text = await res.text();
          let data: any = {};
          try { data = text ? JSON.parse(text) : {}; } catch { data = {}; }
@@ -43,6 +41,24 @@ export default function BookingForm() {
      
          setStatus({ type: "ok", msg: "Booked! We’ll contact you shortly." });
          form.reset();
+     
+         // ✅ Redirect ONLY after success
+         const wa = process.env.NEXT_PUBLIC_WHATSAPP || "923082310366";
+         const msg = encodeURIComponent(
+           `Hi! I want to book AC service.\n` +
+           `Name: ${payload.name}\n` +
+           `Phone: ${payload.phone}\n` +
+           `Area: ${payload.area}\n` +
+           `Service: ${payload.serviceType}\n` +
+           `AC Type: ${payload.acType}\n` +
+           `Tonnage: ${payload.tonnage}\n` +
+           `Issue: ${payload.message || "N/A"}`
+         );
+     
+         setTimeout(() => {
+           window.location.href = `https://wa.me/${wa}?text=${msg}`;
+         }, 1500);
+     
        } catch (err: any) {
          console.log("Submit error:", err);
          if (err?.name === "AbortError") return;
@@ -51,6 +67,8 @@ export default function BookingForm() {
          setLoading(false);
        }
      }
+
+
 
 
   return (
