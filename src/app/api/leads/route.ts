@@ -11,7 +11,14 @@ function isValidPhone(phone: string) {
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    //Robust body parsing (works reliably on Vercel + local)
+    const raw = await req.text();
+    let body: any = {};
+    try {
+      body = raw ? JSON.parse(raw) : {};
+    } catch {
+      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    }
 
     const name = String(body?.name || "").trim();
     const phone = String(body?.phone || "").trim();
@@ -25,9 +32,9 @@ export async function POST(req: Request) {
     if (!phone || !isValidPhone(phone)) return json({ error: "Valid phone is required." }, 400);
     if (!area) return json({ error: "Area is required." }, 400);
 
-    const allowedService = ["Repair","Installation","Service","Gas Refill","Shifting","Inspection"];
-    const allowedAcType = ["Inverter","Non-Inverter","Not sure"];
-    const allowedTon = ["1 Ton","1.5 Ton","2 Ton","Not sure"];
+    const allowedService = ["Repair", "Installation", "Service", "Gas Refill", "Shifting", "Inspection"];
+    const allowedAcType = ["Inverter", "Non-Inverter", "Not sure"];
+    const allowedTon = ["1 Ton", "1.5 Ton", "2 Ton", "Not sure"];
 
     if (!allowedService.includes(serviceType)) return json({ error: "Invalid service type." }, 400);
     if (!allowedAcType.includes(acType)) return json({ error: "Invalid AC type." }, 400);
@@ -63,7 +70,9 @@ export async function POST(req: Request) {
     }
 
     return json({ ok: true }, 201);
-  } catch {
-    return json({ error: "Invalid request." }, 400);
+  } catch (err: any) {
+    // helpful for Vercel logs
+    console.error("POST /api/leads error:", err);
+    return json({ error: "Invalid request In The End." }, 400);
   }
 }
