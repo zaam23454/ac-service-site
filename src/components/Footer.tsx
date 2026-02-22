@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Footer() {
   const phone = process.env.NEXT_PUBLIC_PHONE || "03160027404";
   const wa = process.env.NEXT_PUBLIC_WHATSAPP || "923160027404";
-  const email = process.env.NEXT_PUBLIC_EMAIL || "info@kaacib.com";
+  const email = process.env.NEXT_PUBLIC_EMAIL || "info@ShirazAcFix.com";
 
   const waLink = `https://wa.me/${wa}?text=${encodeURIComponent(
     "Hi! I want to book AC service in Karachi. My area is ____ and issue is ____."
