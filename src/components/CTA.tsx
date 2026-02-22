@@ -1,22 +1,28 @@
 export default function CTA() {
-  const phone = process.env.NEXT_PUBLIC_PHONE || "0300-0000000";
-  const wa = process.env.NEXT_PUBLIC_WHATSAPP || "923000000000";
-  const waLink = `https://wa.me/${wa}?text=${encodeURIComponent("Hi, I want to book AC service. My area is ____ and issue is ____.")}`;
+  const phone = process.env.NEXT_PUBLIC_PHONE || "03160027404";
+  const wa = process.env.NEXT_PUBLIC_WHATSAPP || "923160027404";
+
+  const telLink = `tel:${phone.replace(/[^0-9+]/g, "")}`;
+  const waLink = `https://wa.me/${wa}?text=${encodeURIComponent(
+    "Hi Shiraz AC Fix! I need urgent AC help in Karachi. My area is ____ and issue is ____."
+  )}`;
 
   return (
-    <section className="section">
-      <div className="container">
-        <div className="card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
-          <div>
-            <h2 className="sectionTitle" style={{ marginBottom: 6 }}>Need urgent AC help?</h2>
-            <p className="p">Call or WhatsApp now — we’ll confirm time and charges upfront.</p>
-          </div>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <a className="btn" href={`tel:${phone}`}>Call Now</a>
-            <a className="btn btnPrimary" href={waLink} target="_blank" rel="noreferrer">WhatsApp</a>
-          </div>
+    <div className="bg-primary text-white rounded p-4 p-lg-5 wow fadeIn" data-wow-delay="0.1s">
+      <div className="row g-4 align-items-center">
+        <div className="col-lg-8">
+          <h2 className="mb-2">Need urgent AC help?</h2>
+          <p className="mb-0">Call or WhatsApp now — we’ll confirm time and charges upfront.</p>
+        </div>
+        <div className="col-lg-4 d-flex gap-2 justify-content-lg-end flex-wrap">
+          <a className="btn btn-light" href={telLink}>
+            Call {phone}
+          </a>
+          <a className="btn btn-outline-light" href={waLink} target="_blank" rel="noreferrer">
+            WhatsApp
+          </a>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

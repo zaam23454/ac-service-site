@@ -3,43 +3,53 @@ import Footer from "@/components/Footer";
 import BookingForm from "@/components/BookingForm";
 
 export default function ContactPage() {
-  const phone = process.env.NEXT_PUBLIC_PHONE || "0300-0000000";
-  const wa = process.env.NEXT_PUBLIC_WHATSAPP || "923000000000";
-  const waLink = `https://wa.me/${wa}?text=${encodeURIComponent("Hi, I want to book AC service. My area is ____ and issue is ____.")}`;
+  const phone = process.env.NEXT_PUBLIC_PHONE || "03160027404";
+  const wa = process.env.NEXT_PUBLIC_WHATSAPP || "923160027404";
+
+  const telLink = `tel:${phone.replace(/[^0-9+]/g, "")}`;
+  const waLink = `https://wa.me/${wa}?text=${encodeURIComponent(
+    "Hi Shiraz AC Fix! I want to book AC service in Karachi. My area is ____ and issue is ____."
+  )}`;
 
   return (
     <>
       <Navbar />
-      <main className="section">
-        <div className="container" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-          <div className="card">
-            <h2 className="sectionTitle">Contact</h2>
-            <p className="p">Call or WhatsApp for quick booking.</p>
-            <hr className="hr" />
-            <div className="small">Phone</div>
-            <div style={{ fontWeight: 800, marginTop: 6 }}>
-              <a href={`tel:${phone}`}>{phone}</a>
+
+      <div className="container-xxl py-5">
+        <div className="container">
+          <div className="row g-5">
+            <div className="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+              <h1 className="display-6 mb-3">Contact & Booking</h1>
+              <p className="mb-4">
+                Call or WhatsApp for quick booking and confirmation of time & charges.
+              </p>
+
+              <div className="d-flex gap-2 flex-wrap mb-4">
+                <a className="btn btn-primary" href={telLink}>
+                  Call {phone}
+                </a>
+                <a className="btn btn-outline-primary" href={waLink} target="_blank" rel="noreferrer">
+                  WhatsApp {wa}
+                </a>
+              </div>
+
+              <BookingForm />
             </div>
 
-            <div className="small" style={{ marginTop: 14 }}>WhatsApp</div>
-            <div style={{ fontWeight: 800, marginTop: 6 }}>
-              <a href={waLink} target="_blank" rel="noreferrer">{wa}</a>
+            <div className="col-lg-6 wow fadeIn" data-wow-delay="0.5s" style={{ minHeight: 450 }}>
+              <div className="position-relative rounded overflow-hidden h-100">
+                <img
+                  className="position-absolute w-100 h-100"
+                  src="/template/img/feature.jpg"
+                  alt="AC Service"
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
             </div>
-
-            <p className="p" style={{ marginTop: 14 }}>
-              Working hours: 10am – 10pm (example)
-            </p>
           </div>
-
-          <BookingForm />
         </div>
+      </div>
 
-        <style>{`
-          @media (max-width: 900px){
-            main .container{ grid-template-columns: 1fr !important; }
-          }
-        `}</style>
-      </main>
       <Footer />
     </>
   );

@@ -1,0 +1,11 @@
+/* Template CSS pack (AirCon) */
+@import url('/template/css/bootstrap.min.css');
+@import url('/template/css/style.css');
+
+/* --- Minimal compatibility tweaks for Next.js --- */
+html, body { width: 100%; overflow-x: hidden; }
+
+/* Your existing components might use these helper classes */
+.container { max-width: 1140px; }
+
+/* If any of your existing custom styles are still needed, add them below. */
