@@ -1,6 +1,4 @@
-import Link from "next/link";
-
-export default function Navbar() {
+export default function Footer() {
   const phone = process.env.NEXT_PUBLIC_PHONE || "03160027404";
   const wa = process.env.NEXT_PUBLIC_WHATSAPP || "923160027404";
 
@@ -10,36 +8,56 @@ export default function Navbar() {
   )}`;
 
   return (
-    <header className="nav">
-      <div className="container navInner">
-        <Link href="/" className="brand">
-          <span className="brandIcon">❄️</span>
-          <span className="brandText">Shiraz AC Fix</span>
-          <span className="badge">Karachi</span>
-        </Link>
+    <footer className="footer">
+      <div className="container footerGrid">
+        <div>
+          <div className="footerBrand">
+            <span>❄️</span>
+            <span>Shiraz AC Fix</span>
+          </div>
+          <p className="p dim" style={{ marginTop: 10 }}>
+            Professional AC Installation, Expert Repair & Maintenance, Gas refill & leakage solutions.
+            Serving all over Karachi.
+          </p>
 
-        <nav className="navLinks">
-          <Link className="link" href="/">
-            Home
-          </Link>
-          <Link className="link" href="/contact">
-            Contact
-          </Link>
+          <div className="footerLinks">
+            <a className="miniLink" href={telLink}>
+              Call: {phone}
+            </a>
+            <a className="miniLink" href={waLink} target="_blank" rel="noreferrer">
+              WhatsApp: {wa}
+            </a>
+          </div>
+        </div>
 
-          <a className="btn btnSmall" href={telLink} aria-label="Call Shiraz AC Fix">
-            Call
-          </a>
-          <a
-            className="btn btnPrimary btnSmall"
-            href={waLink}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="WhatsApp Shiraz AC Fix"
-          >
-            WhatsApp
-          </a>
-        </nav>
+        <div>
+          <div className="footerTitle">Quick Services</div>
+          <div className="pillRow" style={{ marginTop: 10 }}>
+            <div className="pill">Repair</div>
+            <div className="pill">Installation</div>
+            <div className="pill">Service</div>
+            <div className="pill">Gas Refill</div>
+            <div className="pill">Shifting</div>
+            <div className="pill">Inspection</div>
+          </div>
+        </div>
+
+        <div>
+          <div className="footerTitle">Trust Signals</div>
+          <div className="stack" style={{ marginTop: 10 }}>
+            <div className="tick">✅ Verified technician</div>
+            <div className="tick">💰 Transparent charges</div>
+            <div className="tick">⚡ Fast response</div>
+            <div className="tick">🧰 Professional tools</div>
+          </div>
+        </div>
       </div>
-    </header>
+
+      <div className="container footerBottom">
+        <div className="small dim">
+          © {new Date().getFullYear()} Shiraz AC Fix (Shiraz Gill). All rights reserved.
+        </div>
+      </div>
+    </footer>
   );
 }
