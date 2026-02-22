@@ -1,23 +1,25 @@
 const faqs = [
   { q: "How fast can you visit?", a: "Same-day visits are possible depending on area and workload." },
-  { q: "Do you provide warranty?", a: "Service work typically has a short warranty (e.g., 7 days) depending on the job." },
-  { q: "What info should I share?", a: "AC type (inverter/non), tonnage, area, and the issue (low cooling/leak/noise)." },
+  { q: "Do you provide warranty?", a: "Warranty depends on job type. We confirm before starting work." },
+  { q: "What info should I share?", a: "AC type, tonnage, area, and issue (low cooling/leak/noise)." },
 ];
 
 export default function FAQ() {
   return (
-    <section className="section">
-      <div className="container">
-        <h2 className="sectionTitle">FAQ</h2>
-        <div className="grid3">
-          {faqs.map((f) => (
-            <div className="card" key={f.q}>
-              <div style={{ fontWeight: 800 }}>{f.q}</div>
-              <p className="p" style={{ marginTop: 8 }}>{f.a}</p>
-            </div>
-          ))}
-        </div>
+    <>
+      <h2 className="sectionTitle">FAQ</h2>
+      <p className="p dim">Quick answers before you book.</p>
+
+      <div className="grid3" style={{ marginTop: 14 }}>
+        {faqs.map((f) => (
+          <div key={f.q} className="card hoverLift">
+            <div className="faqQ">{f.q}</div>
+            <p className="p dim" style={{ marginTop: 8 }}>
+              {f.a}
+            </p>
+          </div>
+        ))}
       </div>
-    </section>
+    </>
   );
 }

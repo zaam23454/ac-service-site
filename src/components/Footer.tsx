@@ -1,25 +1,45 @@
-export default function Footer() {
-  const phone = process.env.NEXT_PUBLIC_PHONE || "0300-0000000";
-  const wa = process.env.NEXT_PUBLIC_WHATSAPP || "923000000000";
-  const waLink = `https://wa.me/${wa}?text=${encodeURIComponent("Hi, I need AC service. Please share availability.")}`;
+import Link from "next/link";
+
+export default function Navbar() {
+  const phone = process.env.NEXT_PUBLIC_PHONE || "03160027404";
+  const wa = process.env.NEXT_PUBLIC_WHATSAPP || "923160027404";
+
+  const telLink = `tel:${phone.replace(/[^0-9+]/g, "")}`;
+  const waLink = `https://wa.me/${wa}?text=${encodeURIComponent(
+    "Hi Shiraz AC Fix! I need AC service in Karachi. Please share availability."
+  )}`;
 
   return (
-    <footer className="footer">
-      <div className="container">
-        <div className="pillRow">
-          <span className="pill">Same-day visits (subject to availability)</span>
-          <span className="pill">Transparent pricing</span>
-          <span className="pill">Technician verified</span>
-        </div>
+    <header className="nav">
+      <div className="container navInner">
+        <Link href="/" className="brand">
+          <span className="brandIcon">❄️</span>
+          <span className="brandText">Shiraz AC Fix</span>
+          <span className="badge">Karachi</span>
+        </Link>
 
-        <div style={{ marginTop: 14 }} className="small">
-          Phone: <a href={`tel:${phone}`}>{phone}</a> · WhatsApp: <a href={waLink} target="_blank" rel="noreferrer">{wa}</a>
-        </div>
+        <nav className="navLinks">
+          <Link className="link" href="/">
+            Home
+          </Link>
+          <Link className="link" href="/contact">
+            Contact
+          </Link>
 
-        <div style={{ marginTop: 10 }} className="small">
-          © {new Date().getFullYear()} AC Expert Karachi. All rights reserved.
-        </div>
+          <a className="btn btnSmall" href={telLink} aria-label="Call Shiraz AC Fix">
+            Call
+          </a>
+          <a
+            className="btn btnPrimary btnSmall"
+            href={waLink}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="WhatsApp Shiraz AC Fix"
+          >
+            WhatsApp
+          </a>
+        </nav>
       </div>
-    </footer>
+    </header>
   );
 }
